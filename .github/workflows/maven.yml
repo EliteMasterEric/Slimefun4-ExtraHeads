@@ -1,6 +1,8 @@
 name: Java CI
 
 on:
+  workflow_dispatch: # We can run this workflow manually
+    inputs:
   push:
     branches:
     - master
