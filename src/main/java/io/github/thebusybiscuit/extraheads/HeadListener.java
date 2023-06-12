@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.inventory.ItemStack;
 
 import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
 import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
@@ -32,7 +33,8 @@ public class HeadListener implements Listener {
         }
 
         if (Math.random() * 100 < chance) {
-            e.getEntity().getWorld().dropItemNaturally(e.getEntity().getLocation(), plugin.getHead(e.getEntity()));
+            ItemStack itemStack = plugin.getHead(e.getEntity());
+            e.getEntity().getWorld().dropItemNaturally(e.getEntity().getLocation(), itemStack);
         }
     }
 

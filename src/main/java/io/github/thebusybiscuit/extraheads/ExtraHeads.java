@@ -6,6 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bstats.bukkit.Metrics;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.EntityType;
@@ -16,6 +17,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
+import io.github.thebusybiscuit.extraheads.special.BeeHeadProvider;
 import io.github.thebusybiscuit.extraheads.special.FrogHeadProvider;
 import io.github.thebusybiscuit.extraheads.special.MobHeadProvider;
 import io.github.thebusybiscuit.extraheads.special.SheepHeadProvider;
@@ -73,7 +75,10 @@ public class ExtraHeads extends JavaPlugin implements SlimefunAddon {
         registerHead(EntityType.TURTLE, "Turtle Head", "0a4050e7aacc4539202658fdc339dd182d7e322f9fbcc4d5f99b5718a");
         registerHead(EntityType.POLAR_BEAR, "Polar Bear Head", "442123ac15effa1ba46462472871b88f1b09c1db467621376e2f71656d3fbc");
         registerHead(EntityType.FOX, "Fox Head", "46cff7a19e683a08e4587ea1457880313d5f341f346ceb5b0551195d810e3");
-        registerHead(EntityType.BEE, "Bee Head", "259001a851bb1b9e9c05de5d5c68b1ea0dc8bd86babf188e0aded8f912c07d0d");
+
+        BeeHeadProvider beeHeadProvider = new BeeHeadProvider(this.getCfg());
+        registerHead(EntityType.BEE, beeHeadProvider, beeHeadProvider.getDescription());
+        
         if (Slimefun.getMinecraftVersion().isAtLeast(MinecraftVersion.MINECRAFT_1_20)) {
             registerHead(EntityType.SNIFFER, "Sniffer Head", "3d6c9f43510cb90d24493e07b7cf8ca9f54132d09a257f20b7048022e3b1b707");
         }

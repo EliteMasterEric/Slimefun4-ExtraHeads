@@ -2,6 +2,7 @@ options:
   auto-update: true
   sword-of-beheading-multiplier: 1.8
   special:
+    bee-variant-chance: 0.1
     shulker-colors: true
     sheep-colors: true
     frog-variants: true
