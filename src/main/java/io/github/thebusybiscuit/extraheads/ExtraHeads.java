@@ -174,6 +174,16 @@ public class ExtraHeads extends JavaPlugin implements SlimefunAddon {
             logger.log(Level.WARNING, x, () -> "Could not load Mob Head for Entity: " + type);
         }
     }
+
+    /**
+     * Register a custom mob head using a custom handler.
+     */
+    private void registerHead(EntityType type, MobHeadProvider provider, String extraInfo) {
+        try {
+            double chance = cfg.getOrSetDefault("chances." + type.toString(), 5.0);
+            SlimefunItemStack item = provider.getHead(null);
+            new MobHead(itemGroup, item, recipeType, new CustomItemStack(item, "&rKill 1 " + ChatUtils.humanize(type.name()), "&7Chance: &e" + chance + "%", extraInfo))
+                .register(this, () -> mobs.put(type, provider));
         }
         catch (Exception x) {
             logger.log(Level.WARNING, x, () -> "Could not load Mob Head for Entity: " + type);
