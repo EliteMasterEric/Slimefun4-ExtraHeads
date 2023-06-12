@@ -20,7 +20,7 @@ public class HeadListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onKill(EntityDeathEvent e) {
-        if (!plugin.getMobDrops().containsKey(e.getEntityType())) {
+        if (!plugin.hasHead(e.getEntity())) {
             return;
         }
 
@@ -32,7 +32,7 @@ public class HeadListener implements Listener {
         }
 
         if (Math.random() * 100 < chance) {
-            e.getEntity().getWorld().dropItemNaturally(e.getEntity().getLocation(), plugin.getMobDrops().get(e.getEntityType()));
+            e.getEntity().getWorld().dropItemNaturally(e.getEntity().getLocation(), plugin.getHead(e.getEntity()));
         }
     }
 

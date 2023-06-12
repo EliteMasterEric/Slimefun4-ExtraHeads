@@ -28,5 +28,4 @@ public class MobHead extends SlimefunItem {
             runnable.run();
         }
     }
-
 }
