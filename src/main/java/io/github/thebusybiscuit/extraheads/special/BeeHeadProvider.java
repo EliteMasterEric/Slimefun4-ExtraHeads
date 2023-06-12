@@ -20,7 +20,7 @@ public class BeeHeadProvider implements MobHeadProvider {
     }
 
     public String getDescription() {
-        if (cfg.getFloat("options.special.bee-variant-chance") > 0.0) {
+        if (cfg.getOrSetDefault("options.special.bee-variant-chance", 0.1) > 0.0) {
             return "&6Has a &bS&dE&fC&fR&dE&bT rare variant!";
         } else {
             return null;
@@ -32,17 +32,34 @@ public class BeeHeadProvider implements MobHeadProvider {
         if (target instanceof Bee) {
             return getHeadByVariant((Bee) target);
         } else {
-            return MobHeadUtils.buildHead("BEE_HEAD", "Bee Head", DEFAULT);
+            return MobHeadUtils.buildHead("BEE_HEAD", "Bee Head", DEFAULT, getGuideLore());
+        }
+    }
+
+    String[] getGuideLore() {
+        double dropChance = cfg.getOrSetDefault("chances.BEE", 5.0);
+        double variantChance = cfg.getOrSetDefault("options.special.bee-variant-chance", 10.0f);
+
+        if (variantChance > 0.0) {
+            return new String[] {
+                "&7Drop Chance: &e" + dropChance + "%",
+                "&6Has a &bS&dE&fC&fR&dE&bT &6rare variant!"
+            };
+        } else {
+            return new String[] {
+                "&7Drop Chance: &e" + dropChance + "%"
+            };
         }
     }
 
     SlimefunItemStack getHeadByVariant(Bee target) {
-        if (!(cfg.getFloat("options.special.bee-variant-chance") > 0)) {
+        double variantChance = cfg.getOrSetDefault("options.special.bee-variant-chance", 10.0) / 100.0;
+        if (variantChance <= 0.0) {
             return MobHeadUtils.buildHead("BEE_HEAD", "Bee Head", DEFAULT);
         }
 
         // 10% odds by default
-        if (ThreadLocalRandom.current().nextFloat() <= cfg.getFloat("options.special.bee-variant-chance")) {
+        if (ThreadLocalRandom.current().nextFloat() <= variantChance) {
             return MobHeadUtils.buildHead("BEE_HEAD_TRANS", "Bee Head (Trans)", TRANS);
         } else {
             return MobHeadUtils.buildHead("BEE_HEAD", "Bee Head", DEFAULT);

@@ -16,26 +16,33 @@ public class FrogHeadProvider implements MobHeadProvider {
         this.cfg = cfg;
     }
 
-
-    public String getDescription() {
-        if (cfg.getBoolean("options.special.frog-variants")) {
-            return "&6Comes in 3 variants!";
-        } else {
-            return null;
-        }
-    }
-
     @Override
     public SlimefunItemStack getHead(LivingEntity target) {
         if (target instanceof Frog) {
             return getHeadByVariant((Frog) target);
         } else {
-            return MobHeadUtils.buildHead("FROG_HEAD", "Frog Head", COLD);
+            return MobHeadUtils.buildHead("FROG_HEAD", "Frog Head", COLD, getGuideLore());
+        }
+    }
+
+    String[] getGuideLore() {
+        double dropChance = cfg.getOrSetDefault("chances.BEE", 5.0);
+        boolean variantsEnabled = cfg.getOrSetDefault("options.special.frog-variants", true);
+
+        if (variantsEnabled) {
+            return new String[] {
+                "&7Drop Chance: &e" + dropChance + "%",
+                "&6Comes in 3 variants!"
+            };
+        } else {
+            return new String[] {
+                "&7Drop Chance: &e" + dropChance + "%"
+            };
         }
     }
 
     SlimefunItemStack getHeadByVariant(Frog target) {
-        if (!cfg.getBoolean("options.special.frog-variants") || target == null || target.getVariant() == null) {
+        if (!cfg.getOrSetDefault("options.special.frog-variants", true) || target == null || target.getVariant() == null) {
             return MobHeadUtils.buildHead("FROG_HEAD", "Frog Head", COLD);
         }
 

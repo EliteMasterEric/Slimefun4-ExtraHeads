@@ -34,25 +34,33 @@ public class ShulkerHeadProvider implements MobHeadProvider {
         this.cfg = cfg;
     }
 
-    public String getDescription() {
-        if (cfg.getBoolean("options.special.shulker-colors")) {
-            return "&6Comes in 16 additional colors!";
-        } else {
-            return null;
-        }
-    }
-
     @Override
     public SlimefunItemStack getHead(LivingEntity target) {
         if (target instanceof Shulker) {
             return getHeadByColor((Shulker) target);
         } else {
-            return MobHeadUtils.buildHead("SHULKER_HEAD", "Shulker Head", DEFAULT);
+            return MobHeadUtils.buildHead("SHULKER_HEAD", "Shulker Head", DEFAULT, getGuideLore());
+        }
+    }
+
+    String[] getGuideLore() {
+        double dropChance = cfg.getOrSetDefault("chances.SHULKER", 5.0);
+        boolean variantsEnabled = cfg.getOrSetDefault("options.special.shulker-variants", true);
+
+        if (variantsEnabled) {
+            return new String[] {
+                "&7Drop Chance: &e" + dropChance + "%",
+                "&6Comes in 16 additional colors!"
+            };
+        } else {
+            return new String[] {
+                "&7Drop Chance: &e" + dropChance + "%"
+            };
         }
     }
 
     SlimefunItemStack getHeadByColor(Shulker target) {
-        if (!cfg.getBoolean("options.special.shulker-colors") || target == null || target.getColor() == null) {
+        if (!cfg.getOrSetDefault("options.special.shulker-colors", true) || target == null || target.getColor() == null) {
             return MobHeadUtils.buildHead("SHULKER_HEAD", "Shulker Head", DEFAULT);
         }
 

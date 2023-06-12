@@ -32,25 +32,33 @@ public class SheepHeadProvider implements MobHeadProvider {
         this.cfg = cfg;
     }
 
-    public String getDescription() {
-        if (cfg.getBoolean("options.special.sheep-colors")) {
-            return "&6Comes in 16 colors!";
-        } else {
-            return null;
-        }
-    }
-
     @Override
     public SlimefunItemStack getHead(LivingEntity target) {
         if (target instanceof Sheep) {
             return getHeadByColor((Sheep) target);
         } else {
-            return MobHeadUtils.buildHead("SHEEP_HEAD", "Sheep Head", DEFAULT);
+            return MobHeadUtils.buildHead("SHEEP_HEAD", "Sheep Head", DEFAULT, getGuideLore());
+        }
+    }
+
+    String[] getGuideLore() {
+        double dropChance = cfg.getOrSetDefault("chances.SHEEP", 5.0);
+        boolean variantsEnabled = cfg.getOrSetDefault("options.special.sheep-variants", true);
+
+        if (variantsEnabled) {
+            return new String[] {
+                "&7Drop Chance: &e" + dropChance + "%",
+                "&6Comes in 16 colors!"
+            };
+        } else {
+            return new String[] {
+                "&7Drop Chance: &e" + dropChance + "%"
+            };
         }
     }
 
     SlimefunItemStack getHeadByColor(Sheep target) {
-        if (!cfg.getBoolean("options.special.sheep-colors") || target == null || target.getColor() == null) {
+        if (!cfg.getOrSetDefault("options.special.sheep-colors", true) || target == null || target.getColor() == null) {
             return MobHeadUtils.buildHead("SHEEP_HEAD", "Sheep Head", DEFAULT);
         }
 
