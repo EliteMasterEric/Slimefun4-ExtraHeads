@@ -34,6 +34,14 @@ public class ShulkerHeadProvider implements MobHeadProvider {
         this.cfg = cfg;
     }
 
+    public String getDescription() {
+        if (cfg.getBoolean("options.special.sheep-colors")) {
+            return "&6Comes in 16 additional colors!";
+        } else {
+            return null;
+        }
+    }
+
     @Override
     public SlimefunItemStack getHead(LivingEntity target) {
         if (target instanceof Shulker) {

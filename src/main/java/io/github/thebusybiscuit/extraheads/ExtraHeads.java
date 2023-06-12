@@ -18,6 +18,7 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.extraheads.special.FrogHeadProvider;
 import io.github.thebusybiscuit.extraheads.special.MobHeadProvider;
+import io.github.thebusybiscuit.extraheads.special.SheepHeadProvider;
 import io.github.thebusybiscuit.extraheads.special.ShulkerHeadProvider;
 import io.github.thebusybiscuit.slimefun4.api.MinecraftVersion;
 import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
@@ -65,7 +66,10 @@ public class ExtraHeads extends JavaPlugin implements SlimefunAddon {
         registerHead(EntityType.CHICKEN, "Chicken Head", "1638469a599ceef7207537603248a9ab11ff591fd378bea4735b346a7fae893");
         registerHead(EntityType.PIG, "Pig Head", "621668ef7cb79dd9c22ce3d1f3f4cb6e2559893b6df4a469514e667c16aa4");
         registerHead(EntityType.RABBIT, "Rabbit Head", "ff1559194a175935b8b4fea6614bec60bf81cf524af6f564333c555e657bc");
-        registerHead(EntityType.SHEEP, "Sheep Head", "f31f9ccc6b3e32ecf13b8a11ac29cd33d18c95fc73db8a66c5d657ccb8be70");
+        
+        SheepHeadProvider sheepHeadProvider = new SheepHeadProvider(this.getCfg());
+        registerHead(EntityType.SHEEP, sheepHeadProvider, sheepHeadProvider.getDescription());
+
         registerHead(EntityType.TURTLE, "Turtle Head", "0a4050e7aacc4539202658fdc339dd182d7e322f9fbcc4d5f99b5718a");
         registerHead(EntityType.POLAR_BEAR, "Polar Bear Head", "442123ac15effa1ba46462472871b88f1b09c1db467621376e2f71656d3fbc");
         registerHead(EntityType.FOX, "Fox Head", "46cff7a19e683a08e4587ea1457880313d5f341f346ceb5b0551195d810e3");
@@ -84,7 +88,9 @@ public class ExtraHeads extends JavaPlugin implements SlimefunAddon {
             registerHead(EntityType.AXOLOTL, "Axolotl Head", "5c138f401c67fc2e1e387d9c90a9691772ee486e8ddbf2ed375fc8348746f936");
         }
         if (Slimefun.getMinecraftVersion().isAtLeast(MinecraftVersion.MINECRAFT_1_19)) {
-            registerHead(EntityType.FROG, new FrogHeadProvider(this.getCfg()), FrogHeadProvider.DESCRIPTION);
+            FrogHeadProvider frogHeadProvider = new FrogHeadProvider(this.getCfg());
+            registerHead(EntityType.FROG, frogHeadProvider, frogHeadProvider.getDescription());
+
             registerHead(EntityType.TADPOLE, "Tadpole", "987035f5352334c2cba6ac4c65c2b9059739d6d0e839c1dd98d75d2e77957847");
         }
         
@@ -133,7 +139,10 @@ public class ExtraHeads extends JavaPlugin implements SlimefunAddon {
         registerHead(EntityType.GUARDIAN, "Guardian Head", "932c24524c82ab3b3e57c2052c533f13dd8c0beb8bdd06369bb2554da86c123");
         registerHead(EntityType.HUSK, "Husk Head", "d674c63c8db5f4ca628d69a3b1f8a36e29d8fd775e1a6bdb6cabb4be4db121");
         registerHead(EntityType.MAGMA_CUBE, "Magma Cube Head", "38957d5023c937c4c41aa2412d43410bda23cf79a9f6ab36b76fef2d7c429");
-        registerHead(EntityType.SHULKER, new ShulkerHeadProvider(this.getCfg()), ShulkerHeadProvider.DESCRIPTION);
+
+        ShulkerHeadProvider shulkerHeadProvider = new ShulkerHeadProvider(this.getCfg());
+        registerHead(EntityType.SHULKER, shulkerHeadProvider, shulkerHeadProvider.getDescription());
+        
         registerHead(EntityType.SLIME, "Slime Head", "16ad20fc2d579be250d3db659c832da2b478a73a698b7ea10d18c9162e4d9b5");
         registerHead(EntityType.SPIDER, "Spider Head", "cd541541daaff50896cd258bdbdd4cf80c3ba816735726078bfe393927e57f1");
         registerHead(EntityType.CAVE_SPIDER, "Cave Spider Head", "41645dfd77d09923107b3496e94eeb5c30329f97efc96ed76e226e98224");
@@ -157,7 +166,6 @@ public class ExtraHeads extends JavaPlugin implements SlimefunAddon {
         }
         registerHead(EntityType.WITHER, "Wither Head", "cdf74e323ed41436965f5c57ddf2815d5332fe999e68fbb9d6cf5c8bd4139f");
         
-        // Illagers
         cfg.save();
 
         new HeadListener(this);

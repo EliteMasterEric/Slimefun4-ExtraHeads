@@ -3,4 +3,5 @@ options:
   sword-of-beheading-multiplier: 1.8
   special:
     shulker-colors: true
+    sheep-colors: true
     frog-variants: true
