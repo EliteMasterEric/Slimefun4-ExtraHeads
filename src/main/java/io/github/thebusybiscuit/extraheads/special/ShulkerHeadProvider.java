@@ -35,7 +35,7 @@ public class ShulkerHeadProvider implements MobHeadProvider {
     }
 
     public String getDescription() {
-        if (cfg.getBoolean("options.special.sheep-colors")) {
+        if (cfg.getBoolean("options.special.shulker-colors")) {
             return "&6Comes in 16 additional colors!";
         } else {
             return null;

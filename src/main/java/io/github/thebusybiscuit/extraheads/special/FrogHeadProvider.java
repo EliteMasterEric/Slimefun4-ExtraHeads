@@ -7,7 +7,7 @@ import io.github.thebusybiscuit.slimefun4.libraries.dough.config.Config;
 
 public class FrogHeadProvider implements MobHeadProvider {
     final Config cfg;
-    
+
     static final String COLD = "27bcccc125a4110434a85c40ada039d050f14ef7db34a3444067310f8ce69606";
     static final String TEMPERATE = "1f3e29dd947a177895f6121d2331b65ac3f896fda4bdd1151491e40b804952a7";
     static final String WARM = "1e9312b5b2bab9ad51ea4b6a407d6d390bb5043408757b976a7556898ac43de0";
@@ -18,7 +18,7 @@ public class FrogHeadProvider implements MobHeadProvider {
 
 
     public String getDescription() {
-        if (cfg.getBoolean("options.special.sheep-colors")) {
+        if (cfg.getBoolean("options.special.frog-variants")) {
             return "&6Comes in 3 variants!";
         } else {
             return null;
@@ -35,7 +35,7 @@ public class FrogHeadProvider implements MobHeadProvider {
     }
 
     SlimefunItemStack getHeadByVariant(Frog target) {
-        if (!cfg.getBoolean("options.special.shulker-variants") || target == null || target.getVariant() == null) {
+        if (!cfg.getBoolean("options.special.frog-variants") || target == null || target.getVariant() == null) {
             return MobHeadUtils.buildHead("FROG_HEAD", "Frog Head", COLD);
         }
 
