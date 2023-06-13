@@ -8,14 +8,14 @@ import org.bukkit.entity.LivingEntity;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.config.Config;
 
-public class BeeHeadProvider implements MobHeadProvider {
+public class BeeHeadHandler extends MobHeadHandler {
     final Config cfg;
 
     static final String DEFAULT = "259001a851bb1b9e9c05de5d5c68b1ea0dc8bd86babf188e0aded8f912c07d0d";
 
     static final String TRANS = "142111ad76f92c584ce1fabdd993dc73939b336d681dbf740d0f13365845c671";
 
-    public BeeHeadProvider(Config cfg) {
+    public BeeHeadHandler(Config cfg) {
         this.cfg = cfg;
     }
 
@@ -32,8 +32,15 @@ public class BeeHeadProvider implements MobHeadProvider {
         if (target instanceof Bee) {
             return getHeadByVariant((Bee) target);
         } else {
-            return MobHeadUtils.buildHead("BEE_HEAD", "Bee Head", DEFAULT, getGuideLore());
+            return MobHeadHandler.buildHead("BEE_HEAD", "Bee Head", DEFAULT, getGuideLore());
         }
+    }
+
+    @Override
+    public SlimefunItemStack[] getVariantItemStacks() {
+        return new SlimefunItemStack[] {
+            MobHeadHandler.buildHead("BEE_HEAD_TRANS", "Bee Head (Trans)", TRANS)
+        };
     }
 
     String[] getGuideLore() {
@@ -55,14 +62,14 @@ public class BeeHeadProvider implements MobHeadProvider {
     SlimefunItemStack getHeadByVariant(Bee target) {
         double variantChance = cfg.getOrSetDefault("options.special.bee-variant-chance", 10.0) / 100.0;
         if (variantChance <= 0.0) {
-            return MobHeadUtils.buildHead("BEE_HEAD", "Bee Head", DEFAULT);
+            return MobHeadHandler.buildHead("BEE_HEAD", "Bee Head", DEFAULT);
         }
 
         // 10% odds by default
         if (ThreadLocalRandom.current().nextFloat() <= variantChance) {
-            return MobHeadUtils.buildHead("BEE_HEAD_TRANS", "Bee Head (Trans)", TRANS);
+            return MobHeadHandler.buildHead("BEE_HEAD_TRANS", "Bee Head (Trans)", TRANS);
         } else {
-            return MobHeadUtils.buildHead("BEE_HEAD", "Bee Head", DEFAULT);
+            return MobHeadHandler.buildHead("BEE_HEAD", "Bee Head", DEFAULT);
         }
     }
 }

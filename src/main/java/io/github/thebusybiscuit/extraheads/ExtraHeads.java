@@ -17,11 +17,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
-import io.github.thebusybiscuit.extraheads.special.BeeHeadProvider;
-import io.github.thebusybiscuit.extraheads.special.FrogHeadProvider;
+import io.github.thebusybiscuit.extraheads.special.BeeHeadHandler;
+import io.github.thebusybiscuit.extraheads.special.FrogHeadHandler;
+import io.github.thebusybiscuit.extraheads.special.MobHeadHandler;
 import io.github.thebusybiscuit.extraheads.special.MobHeadProvider;
-import io.github.thebusybiscuit.extraheads.special.SheepHeadProvider;
-import io.github.thebusybiscuit.extraheads.special.ShulkerHeadProvider;
+import io.github.thebusybiscuit.extraheads.special.SheepHeadHandler;
+import io.github.thebusybiscuit.extraheads.special.ShulkerHeadHandler;
 import io.github.thebusybiscuit.slimefun4.api.MinecraftVersion;
 import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
@@ -68,11 +69,11 @@ public class ExtraHeads extends JavaPlugin implements SlimefunAddon {
         registerHead(EntityType.CHICKEN, "Chicken Head", "1638469a599ceef7207537603248a9ab11ff591fd378bea4735b346a7fae893");
         registerHead(EntityType.PIG, "Pig Head", "621668ef7cb79dd9c22ce3d1f3f4cb6e2559893b6df4a469514e667c16aa4");
         registerHead(EntityType.RABBIT, "Rabbit Head", "ff1559194a175935b8b4fea6614bec60bf81cf524af6f564333c555e657bc");
-        registerHead(EntityType.SHEEP, new SheepHeadProvider(this.getCfg()));
+        registerHeads(EntityType.SHEEP, new SheepHeadHandler(this.getCfg()));
         registerHead(EntityType.TURTLE, "Turtle Head", "0a4050e7aacc4539202658fdc339dd182d7e322f9fbcc4d5f99b5718a");
         registerHead(EntityType.POLAR_BEAR, "Polar Bear Head", "442123ac15effa1ba46462472871b88f1b09c1db467621376e2f71656d3fbc");
         registerHead(EntityType.FOX, "Fox Head", "46cff7a19e683a08e4587ea1457880313d5f341f346ceb5b0551195d810e3");
-        registerHead(EntityType.BEE, new BeeHeadProvider(this.getCfg()));
+        registerHeads(EntityType.BEE, new BeeHeadHandler(this.getCfg()));
         if (Slimefun.getMinecraftVersion().isAtLeast(MinecraftVersion.MINECRAFT_1_20)) {
             registerHead(EntityType.SNIFFER, "Sniffer Head", "3d6c9f43510cb90d24493e07b7cf8ca9f54132d09a257f20b7048022e3b1b707");
         }
@@ -87,7 +88,7 @@ public class ExtraHeads extends JavaPlugin implements SlimefunAddon {
             registerHead(EntityType.AXOLOTL, "Axolotl Head", "5c138f401c67fc2e1e387d9c90a9691772ee486e8ddbf2ed375fc8348746f936");
         }
         if (Slimefun.getMinecraftVersion().isAtLeast(MinecraftVersion.MINECRAFT_1_19)) {
-            registerHead(EntityType.FROG, new FrogHeadProvider(this.getCfg()));
+            registerHeads(EntityType.FROG, new FrogHeadHandler(this.getCfg()));
             registerHead(EntityType.TADPOLE, "Tadpole", "987035f5352334c2cba6ac4c65c2b9059739d6d0e839c1dd98d75d2e77957847");
         }
         
@@ -136,7 +137,7 @@ public class ExtraHeads extends JavaPlugin implements SlimefunAddon {
         registerHead(EntityType.GUARDIAN, "Guardian Head", "932c24524c82ab3b3e57c2052c533f13dd8c0beb8bdd06369bb2554da86c123");
         registerHead(EntityType.HUSK, "Husk Head", "d674c63c8db5f4ca628d69a3b1f8a36e29d8fd775e1a6bdb6cabb4be4db121");
         registerHead(EntityType.MAGMA_CUBE, "Magma Cube Head", "38957d5023c937c4c41aa2412d43410bda23cf79a9f6ab36b76fef2d7c429");
-        registerHead(EntityType.SHULKER, new ShulkerHeadProvider(this.getCfg()));
+        registerHeads(EntityType.SHULKER, new ShulkerHeadHandler(this.getCfg()));
         registerHead(EntityType.SLIME, "Slime Head", "16ad20fc2d579be250d3db659c832da2b478a73a698b7ea10d18c9162e4d9b5");
         registerHead(EntityType.SPIDER, "Spider Head", "cd541541daaff50896cd258bdbdd4cf80c3ba816735726078bfe393927e57f1");
         registerHead(EntityType.CAVE_SPIDER, "Cave Spider Head", "41645dfd77d09923107b3496e94eeb5c30329f97efc96ed76e226e98224");
@@ -172,8 +173,8 @@ public class ExtraHeads extends JavaPlugin implements SlimefunAddon {
         try {
             double chance = cfg.getOrSetDefault("chances." + type.toString(), 5.0);
             SlimefunItemStack item = new SlimefunItemStack(type.toString() + "_HEAD", texture, "&r" + name, "&7Drop Chance: &e" + chance + "%");
-            new MobHead(itemGroup, item, recipeType, new CustomItemStack(item, "&rKill 1 " + ChatUtils.humanize(type.name()), "&7Chance: &e" + chance + "%"))
-                .register(this, () -> mobs.put(type, (entity) -> item));
+            MobHead baseItem = new MobHead(itemGroup, item, recipeType, new CustomItemStack(item, "&rKill 1 " + ChatUtils.humanize(type.name()), "&7Chance: &e" + chance + "%"));
+            baseItem.register(this, () -> mobs.put(type, (entity) -> baseItem.getCleanItem()));
         }
         catch (Exception x) {
             logger.log(Level.WARNING, x, () -> "Could not load Mob Head for Entity: " + type);
@@ -183,12 +184,19 @@ public class ExtraHeads extends JavaPlugin implements SlimefunAddon {
     /**
      * Register a custom mob head using a custom handler.
      */
-    private void registerHead(EntityType type, MobHeadProvider provider) {
+    private void registerHeads(EntityType type, MobHeadHandler provider) {
         try {
             SlimefunItemStack item = provider.getHead(null);
             String[] itemDescription = item.getItemMeta().getLore().toArray(new String[0]);
-            new MobHead(itemGroup, item, recipeType, new CustomItemStack(item, "&rKill 1 " + ChatUtils.humanize(type.name()), itemDescription))
-                .register(this, () -> mobs.put(type, provider));
+            MobHead baseItem = new MobHead(itemGroup, item, recipeType, new CustomItemStack(item, "&rKill 1 " + ChatUtils.humanize(type.name()), itemDescription));
+            baseItem.register(this, () -> mobs.put(type, provider));
+
+            // Register variants, but keep them hidden.
+            for (SlimefunItemStack variantItemStack : provider.getVariantItemStacks()) {
+                MobHead variantItem = new MobHead(itemGroup, variantItemStack, recipeType, variantItemStack);
+                variantItem.register(this, () -> {});
+                variantItem.setHidden(true);
+            }
         }
         catch (Exception x) {
             logger.log(Level.WARNING, x, () -> "Could not load Mob Head for Entity: " + type);
